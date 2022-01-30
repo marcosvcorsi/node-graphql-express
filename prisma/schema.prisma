@@ -16,5 +16,5 @@ model User {
   updatedAt DateTime? @updatedAt
 
   name  String
-  email String
+  email String @unique
 }

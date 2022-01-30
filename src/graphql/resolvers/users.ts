@@ -1,31 +1,22 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
-import { v4 } from "uuid";
+import { UsersRepository } from "../../repositories/users";
+import { CreateUserService } from "../../services/create-user";
+import { FindUsersService } from "../../services/find-users";
 import { CreateUserInput, User } from "../schemas/user";
 
 @Resolver()
 export class UsersResolver {
-  userList: User[];
-
-  constructor() {
-    this.userList = [];
-  }
-
   @Query(() => [User])
   async users(): Promise<User[]> {
-    return this.userList;
+    const findUsersService = new FindUsersService(new UsersRepository());
+
+    return findUsersService.execute();
   }
 
   @Mutation(() => User)
   async createUser(@Arg("input") input: CreateUserInput): Promise<User> {
-    const id = v4();
+    const createUserService = new CreateUserService(new UsersRepository());
 
-    const user = {
-      id,
-      ...input,
-    };
-
-    this.userList.push(user);
-
-    return user;
+    return createUserService.execute(input);
   }
 }
