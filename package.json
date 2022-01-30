@@ -31,6 +31,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "graphql": "^15.8.0",
+    "prisma": "^3.8.1",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
     "uuid": "^8.3.2"
