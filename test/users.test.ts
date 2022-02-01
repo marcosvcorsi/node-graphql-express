@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import request from "supertest";
 import { app } from "../src/app";
+import { makeGraphQLRequest } from "./helpers";
 
 describe("Users Integration", () => {
   let prismaClient: PrismaClient;
@@ -32,9 +33,7 @@ describe("Users Integration", () => {
       },
     });
 
-    const response = await request(app).post("/graphql").send({
-      query: "{ users { id, email, name } }",
-    });
+    const response = await makeGraphQLRequest("{ users { id, email, name } }");
 
     expect(response.body.data.users).toEqual([user]);
   });
@@ -45,11 +44,9 @@ describe("Users Integration", () => {
       name: "any_name",
     };
 
-    const response = await request(app)
-      .post("/graphql")
-      .send({
-        query: `mutation { createUser(input: { email: "${params.email}", name: "${params.name}" }) { id, email, name } }`,
-      });
+    const response = await makeGraphQLRequest(
+      `mutation { createUser(input: { email: "${params.email}", name: "${params.name}" }) { id, email, name } }`
+    );
 
     expect(response.body.data.createUser).toMatchObject(params);
   });
